@@ -1,16 +1,27 @@
-/** 
- * OBJECITF:
- * 
- * Mettre en place un générateur de MDP prenant en compte un nombre de caractère et un algorithme défini (leet, chiffre césar,...) ou pas
- * 
- * 
- * 
- * 
-*/
+//DOM Elements
+
+const submitForm = document.querySelector("button")
+
+/**
+ * Fonction déterminant la longueur du MDP
+ *
+ * @param {number} min
+ * @param {number} max
+ * @return {number} 
+ */
 
 function getRandNum (min, max){
     return Math.floor(Math.random()*(max-min) + min)
 }
+
+
+/**
+ * Fonction récupérant un nombre X de caractère selon le type de caractère
+ *
+ * @param {number} num 
+ * @param {string} charType // Variable représentant la liste des caractères du charType (ex: lowerCase = 'abc....') 
+ * @return {string} // Retourne un morceau du MDP selon le type de caractère
+ */
 
 function randomChar(num, charType){
     let result=''
@@ -20,7 +31,14 @@ function randomChar(num, charType){
     return result
 }
 
-const randNumb = getRandNum(10,16)
+const randNumb = getRandNum(15,26)
+
+/**
+ * Fonction permettant la génération de MDP
+ *
+ * @param {number} length //représente la longueur du mot de passe défini par la fonction getRandNum
+ * @return {string} 
+ */
 
 function generatePassword(length){
     let result = ''
@@ -29,8 +47,6 @@ function generatePassword(length){
     const numbers = '0123456789'
     const specialCharac = '!@#$%^&*()[]-_'
     let charaLength = length
-    
-    console.log(charaLength)
     
     let numLower = Math.floor(Math.random()*((charaLength-3)-2)+2)
     charaLength -= numLower
@@ -54,4 +70,42 @@ function generatePassword(length){
     return shuffled
 }
 
-console.log(generatePassword(randNumb))
+/**
+ * Fonction permettant de créer l'élément HTML pour montrer le MDP à l'utilisateur
+ *
+ * @param {string} pswd //on importe le MDP pour l'intégrer au DOM
+ * @return {HTMLElement}
+ */
+
+function showPassword(pswd){
+    let pswdDiv = document.querySelector('.mdp')
+    let newDiv = document.createElement("p")
+    newDiv.innerHTML = pswd
+    let showPswDiv = pswdDiv.append(newDiv)
+    return showPswDiv
+}
+
+/**
+ * Evènement permettant lors du clique sur le bouton de générer le MDP et de l'afficher à l'utilisateur.
+ *
+ * @param {string} pswd //on importe le MDP pour l'intégrer au DOM
+ * @return {HTMLElement}
+ */
+
+submitForm.addEventListener('click', function(e){
+    e.preventDefault()
+    let numChoice = parseInt(document.querySelector('#test').value, 10)
+    let numMax = getRandNum(numChoice, (numChoice+7))
+    let mdp
+
+    if(Number.isInteger(numChoice) && numChoice >= 12){
+       mdp = generatePassword(numMax)
+       showPassword(mdp)
+       console.log(mdp)
+    }else{
+        console.log("Erreur dans la saisie. Le mot de passe doit faire minimum 12 caractères!")
+    }
+})
+
+
+
