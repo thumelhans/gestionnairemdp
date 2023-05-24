@@ -48,6 +48,7 @@ function generatePassword(length){
     const specialCharac = '!@#$%^&*()[]-_'
     let charaLength = length
     
+    //TODO corriger le fait que parfois on a qu'un seul type de caractère
     let numLower = Math.floor(Math.random()*((charaLength-3)-2)+2)
     charaLength -= numLower
 
@@ -107,5 +108,37 @@ submitForm.addEventListener('click', function(e){
     }
 })
 
+/** 
+ * Transformation du mot de passe selon l'algorithme leet
+ * 
+ * @param {string} pswd // correspond au MDP qu'on veut changer
+ * @returns {string}
+*/
 
+function leetPassword (pswd){
+    
+    let oldPswd = Array.from(pswd.toLowerCase())
+    let leetDictionnary = {
+        "a": "@", "b": "b", "c": "(", "d": "d", "e": "3", "f": "f", "g": "g", "h": "]-[", "i": "1", "j": "j", "k": "k", "l": "£", "m": "m", "n": "n", "o": "0", "p": "p", "q": "9", "r": "r", "s": "5", "t": "7", "u": "u", "v": "v", "w": "w", "x": "><", "y": "y", "z": "2", " ": "_"
+    }//TODO Voir pour changer le type de caractère
+    let newPswd = []
+    //TODO Faire en sorte que si le lettre ne correspond pas elle est quand même intégrée au nouveau tableau.
+    for(const [key, value] of Object.entries(leetDictionnary)){
+        
+        for(let i = 0 ; i < oldPswd.length; i++){
+            if(key === oldPswd[i]){
+                newPswd[i]=value
+            }
+        } 
 
+    }
+    let randIndex = ''
+
+    for(let i = 0 ; i < (newPswd.length/2); i++){
+        randIndex = Math.floor(Math.random()*(newPswd.length))
+        newPswd[randIndex] = newPswd[randIndex].toUpperCase()
+    }
+    return newPswd.join('')
+}
+
+console.log(leetPassword('bonjour la vie vous allez bien'))
