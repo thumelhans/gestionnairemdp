@@ -186,3 +186,50 @@ function cesarPassword(pswd){ //TODO gérer les majuscules, les chiffres et cara
 }
 
 console.log(cesarPassword("bonjourfacebook"))
+
+
+/**
+ * Fonction permettant la création d'un MDP selon l'algorithme Vigenere. Il admet 2 clés, une étant la position de la lettre dans l'alphabet, l'autre la position de la lettre par rapport à une clé répété. La somme de ces 2 clés donne la substitution à effectuer.
+ *
+ * @param {string} pswd
+ * @returns {string}
+ */
+function vigenerePassword(pswd){//TODO gérer les majuscules, chiffres et caractères spéciaux
+    let repKey = ['betty', 'love', 'hope', 'fils', 'amour']
+    let key1 = []
+    let key2 = []
+    let vigenereDictionnary = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    let oldPswd = pswd
+    let newPswd = ''
+    const randRepKey = Math.floor(Math.random()*4)
+    const key = repKey[randRepKey]
+    
+    for(let letter of oldPswd){//TODO Refacto la récupération de l'index du MDP et de la CLE
+        if(vigenereDictionnary.includes(letter)){
+            key1.push((vigenereDictionnary.indexOf(letter)+1))
+        }
+    }
+    
+    for(let repLetter of key){
+        if(vigenereDictionnary.includes(repLetter)){
+            key2.push((vigenereDictionnary.indexOf(repLetter)))
+        }
+    }
+    
+    for (let i = 0; i < oldPswd.length; i++){
+        
+        let keyModulo = i % key2.length
+        let sumOfKey = key1[i]+key2[keyModulo]
+         
+        if(sumOfKey < 26){
+            newPswd+=vigenereDictionnary[sumOfKey]
+        }else{
+            let sum1 = (sumOfKey)-vigenereDictionnary.length
+            newPswd += vigenereDictionnary[sum1]
+        }
+    }
+
+    return newPswd
+}
+
+console.log(vigenerePassword("hellofacebook"))
