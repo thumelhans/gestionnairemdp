@@ -142,3 +142,47 @@ function leetPassword (pswd){
 }
 
 console.log(leetPassword('bonjour la vie vous allez bien'))
+
+
+/**
+ * Transformation du MDP selon l'algorithme du chiffre de César
+ * La clé de substitution sera déterminée aléatoirement
+ *
+ * @param {string} pswd //Correspond au MDP qu'on veut modifier
+ * @returns {string}
+ */
+function cesarPassword(pswd){ //TODO gérer les majuscules, les chiffres et caractères spéciaux
+
+    const cesarDictionnary = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    const subKey = Math.floor((Math.random()*25)+1)
+    let oldPswd = pswd
+    let newPswd =''
+
+    for(let letter of oldPswd){
+        cesarApplication(letter, cesarDictionnary, subKey)
+    }
+    
+    /**
+     * Fonction principale qui compare la lettre du MDP au dictionnaire et substitue cette lettre selon le principe du chiffre César
+     *
+     * @param {string} pswdIndexValue Représente la lettre qu'on compare
+     * @param {Array} dictionnary
+     * @param {number} key 
+     * @return {string} 
+     */
+    function cesarApplication(pswdIndexValue, dictionnary, key){
+        for(let i = 0; i < dictionnary.length; i++){
+                    
+            if (pswdIndexValue === dictionnary[i] && dictionnary[(i+key)] != undefined){
+                newPswd += dictionnary[(i+key)]
+            }else if(pswdIndexValue === dictionnary[i] && dictionnary[(i+key)] == undefined){
+                let sum1 = (i+key)-dictionnary.length
+                newPswd += dictionnary[sum1]
+            }
+        }
+        return newPswd
+    }
+    return newPswd
+}
+
+console.log(cesarPassword("bonjourfacebook"))
