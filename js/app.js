@@ -1,3 +1,5 @@
+//TODO faire le nettoyage du fichier en séprant les modules
+
 //DOM Elements
 
 const submitForm = document.querySelector("button")
@@ -86,6 +88,12 @@ function showPassword(pswd){
     return showPswDiv
 }
 
+function radioChecked(){
+
+}
+
+
+
 /**
  * Evènement permettant lors du clique sur le bouton de générer le MDP et de l'afficher à l'utilisateur.
  *
@@ -93,11 +101,34 @@ function showPassword(pswd){
  * @return {HTMLElement}
  */
 
-submitForm.addEventListener('click', function(e){
+submitForm.addEventListener('click', function(e){ //TODO Ajouter le nettoyage des champs sauf celui du showPassword
     e.preventDefault()
-    let numChoice = parseInt(document.querySelector('#test').value, 10)
+    let numChoice = parseInt(document.querySelector('#length').value, 10)
     let numMax = getRandNum(numChoice, (numChoice+7))
     let mdp
+    const userPassword = document.querySelector('#user-password').value
+    const cypherChoice = document.getElementsByName('algo-choice')
+
+    console.log(userPassword)
+    
+    for(let value of cypherChoice){
+        if(value.checked){
+            
+            switch(value.id){
+                case 'leet': 
+                    mdp = leetPassword(userPassword)
+                    break;
+                case 'cesar': 
+                    mdp = cesarPassword(userPassword)
+                    break;
+                case 'vigenere': 
+                    mdp = vigenerePassword(userPassword)
+                    break
+            }
+            console.log(mdp)
+            showPassword(mdp)
+        }
+    }
 
     if(Number.isInteger(numChoice) && numChoice >= 12){
        mdp = generatePassword(numMax)

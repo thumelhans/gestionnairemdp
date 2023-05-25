@@ -18,8 +18,27 @@
                 <div class="mdp"></div>
                 <div class="options">
                     <form action="">
-                        <label for="test">Quelle taille minimum souhaitez vous? (min:12)</label>
-                        <input type="text" id="test">
+                        <label for="length">Quelle taille minimum souhaitez vous? (min:12)</label>
+                        <input type="text" id="length">
+                        
+                        <div class="algo-choice">
+                            <label for="length">Votre mot de passe à modifier</label>
+                            <input type="text" id="user-password">
+
+                            <p>Quelle chiffrement? </p>
+                            <div>
+                                <input type="radio" id="leet" name="algo-choice" value="leet">
+                                <label for="leet">L33t</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="cesar" name="algo-choice" value="cesar">
+                                <label for="cesar">Chiffre César</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="vigenere" name="algo-choice" value="vigenere">
+                                <label for="vigenere">Vigenère</label>
+                            </div>
+                        </div>
                         <button>OK</button>
                     </form>
                 </div>
