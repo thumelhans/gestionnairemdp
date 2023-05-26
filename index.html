@@ -7,36 +7,58 @@
     <title>Document</title>
     <script src="/js/app.js"type="module" defer></script>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://kit.fontawesome.com/2247cba2a3.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
     <header>
         <h1>Générateur de MDP</h1>    
+        <nav class="navbar">
+            <ul class="navbar-container">
+                <li>
+                    <a href="#">Se connecter</a> 
+                </li>
+                <li>
+                    <a href="#">S'inscrire</a> 
+                </li>
+            </ul>
+        </nav>
     </header>
     <main>
         <section id="generateur">
             <div class="mdp-container">
-                <div class="mdp"></div>
+                <div id="password-container">
+                    <div class="mdp"></div>
+                    <div id="copy" data-tooltip="Copier le mot de passe">
+                        <button class="test"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                </div>
                 <div class="options">
                     <form action="">
-                        <label for="length">Quelle taille minimum souhaitez vous? (min:12)</label>
-                        <input type="text" id="length">
-                        
+                        <div>
+                            <label for="length">Quelle taille minimum souhaitez vous? (min:12)</label>
+                            <input type="text" id="length">
+                        </div>
                         <div class="algo-choice">
-                            <label for="length">Votre mot de passe à modifier</label>
-                            <input type="text" id="user-password">
+                            <div class="algo-input">
+                                <label for="user-password">Entrez le mot de passe à modifier</label>
+                                <input type="text" id="user-password">
+                            </div>
 
                             <p>Quelle chiffrement? </p>
-                            <div>
-                                <input type="radio" id="leet" name="algo-choice" value="leet">
-                                <label for="leet">L33t</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="cesar" name="algo-choice" value="cesar">
-                                <label for="cesar">Chiffre César</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="vigenere" name="algo-choice" value="vigenere">
-                                <label for="vigenere">Vigenère</label>
+                            <div class="radio-container">
+                                <div>
+                                    <input type="radio" id="leet" name="algo-choice" value="leet">
+                                    <label for="leet">L33t</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="cesar" name="algo-choice" value="cesar">
+                                    <label for="cesar">Chiffre César</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="vigenere" name="algo-choice" value="vigenere">
+                                    <label for="vigenere">Vigenère</label>
+                                </div>
                             </div>
                         </div>
                         <button>OK</button>
@@ -44,6 +66,26 @@
                 </div>
             </div>
         </section>
+        <div class="bground-signup">
+            <form action="" class="signup-form">
+                <h2>S'inscrire</h2>
+                <label for="signin-email">Entrez votre E-mail</label>
+                <input type="email" name="user-email" id="signup-email">
+                <label for="signin-password">Entrez votre mot de passe</label>
+                <input type="password" name="user-email" id="signup-password">
+                <button>s'inscrire</button>
+            </form>
+        </div>
+        <div class="bground-signin">
+            <form action="" class="signin-form">
+                <h2>Se connecter</h2>
+                <label for="signin-email">Entrez votre E-mail</label>
+                <input type="email" name="user-email" id="signin-email">
+                <label for="signin-password">Entrez votre mot de passe</label>
+                <input type="password" name="user-email" id="signin-password">
+                <button>se connecter</button>
+            </form>
+        </div>
     </main>
     <footer>
 

@@ -2,7 +2,9 @@
 
 //DOM Elements
 
-const submitForm = document.querySelector("button")
+const submitForm = document.querySelector("form button")
+const formSelection = document.querySelector('form')
+const copySelection = document.querySelector(".test")
 
 /**
  * Fonction déterminant la longueur du MDP
@@ -15,7 +17,6 @@ const submitForm = document.querySelector("button")
 function getRandNum (min, max){
     return Math.floor(Math.random()*(max-min) + min)
 }
-
 
 /**
  * Fonction récupérant un nombre X de caractère selon le type de caractère
@@ -50,26 +51,23 @@ function generatePassword(length){
     const specialCharac = '!@#$%^&*()[]-_'
     let charaLength = length
     
-    //TODO corriger le fait que parfois on a qu'un seul type de caractère
-    let numLower = Math.floor(Math.random()*((charaLength-3)-2)+2)
-    charaLength -= numLower
+    const numLower = Math.floor(Math.random() * (charaLength - 3 - 1)) + 2;
+    charaLength -= numLower;
 
-    let numUpper = Math.floor(Math.random()*((charaLength-2)-2)+2)
-    charaLength -= numUpper
-    
-    let numNbr = Math.floor(Math.random()*((charaLength-1)-2)+2)
-    charaLength -= numNbr
-    
-    let numSpc = charaLength
-    charaLength -= numNbr
+    const numUpper = Math.floor(Math.random() * (charaLength - 2 - 1)) + 2;
+    charaLength -= numUpper;
+
+    const numNbr = Math.floor(Math.random() * (charaLength - 1)) + 2;
+    charaLength -= numNbr;
+
+    const numSpc = Math.max(charaLength, 2);
 
     result += randomChar(numLower, lowerCase)
     result += randomChar(numUpper, upperCase)
     result += randomChar(numNbr, numbers)
     result += randomChar(numSpc, specialCharac)
-       
     const shuffled = result.split('').sort(function(){return 0.5-Math.random()}).join('')
-
+    
     return shuffled
 }
 
@@ -80,9 +78,10 @@ function generatePassword(length){
  * @return {HTMLElement}
  */
 
-function showPassword(pswd){
+function showPassword(pswd){ //TODO gérer la position et/ou la taille de police lorsque le mdp est trop long
     let pswdDiv = document.querySelector('.mdp')
-    let newDiv = document.createElement("p")
+    let newDiv = document.createElement("div")
+    newDiv.classList.add("mdp-content")
     newDiv.innerHTML = pswd
     let showPswDiv = pswdDiv.append(newDiv)
     return showPswDiv
@@ -92,7 +91,15 @@ function radioChecked(){
 
 }
 
-
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('Le texte a été copié dans le presse-papiers :', text);
+      })
+      .catch((error) => {
+        console.error('Une erreur s\'est produite lors de la copie dans le presse-papiers :', error);
+      });
+  }
 
 /**
  * Evènement permettant lors du clique sur le bouton de générer le MDP et de l'afficher à l'utilisateur.
@@ -101,43 +108,51 @@ function radioChecked(){
  * @return {HTMLElement}
  */
 
-submitForm.addEventListener('click', function(e){ //TODO Ajouter le nettoyage des champs sauf celui du showPassword
-    e.preventDefault()
-    let numChoice = parseInt(document.querySelector('#length').value, 10)
-    let numMax = getRandNum(numChoice, (numChoice+7))
-    let mdp
-    const userPassword = document.querySelector('#user-password').value
-    const cypherChoice = document.getElementsByName('algo-choice')
 
-    console.log(userPassword)
+submitForm.addEventListener('click', function(e) {
+    e.preventDefault();
     
-    for(let value of cypherChoice){
-        if(value.checked){
-            
-            switch(value.id){
-                case 'leet': 
-                    mdp = leetPassword(userPassword)
-                    break;
-                case 'cesar': 
-                    mdp = cesarPassword(userPassword)
-                    break;
-                case 'vigenere': 
-                    mdp = vigenerePassword(userPassword)
-                    break
-            }
-            console.log(mdp)
-            showPassword(mdp)
-        }
+    const numChoice = parseInt(document.querySelector('#length').value, 10);
+    const numMax = getRandNum(numChoice, numChoice + 7);
+    const userPassword = document.querySelector('#user-password').value;
+    const cypherChoice = document.querySelector('input[name="algo-choice"]:checked');
+    let mdp;
+  
+    const passwordField = document.querySelector('.mdp-content');
+    if (passwordField) {
+      passwordField.parentNode.removeChild(passwordField);
     }
+  
+    if (cypherChoice) {
+      switch (cypherChoice.id) {
+        case 'leet':
+          mdp = leetPassword(userPassword);
+          break;
+        case 'cesar':
+          mdp = cesarPassword(userPassword);
+          break;
+        case 'vigenere':
+          mdp = vigenerePassword(userPassword);
+          break;
+      }
+      showPassword(mdp);
+    }
+  
+    if (Number.isInteger(numChoice) && numChoice >= 12) {
+      mdp = generatePassword(numMax);
+      showPassword(mdp);
+      console.log(mdp);
+    } else if (!isNaN(numChoice)) {
+      console.log("Erreur dans la saisie. Le mot de passe doit faire minimum 12 caractères !");//TODO gérer l'affichage de l'information à l'utilisateur
+    }
+    
+    copySelection.addEventListener('click', function(e){
+        e.preventDefault()
+        copyToClipboard(mdp)
+    })
 
-    if(Number.isInteger(numChoice) && numChoice >= 12){
-       mdp = generatePassword(numMax)
-       showPassword(mdp)
-       console.log(mdp)
-    }else{
-        console.log("Erreur dans la saisie. Le mot de passe doit faire minimum 12 caractères!")
-    }
-})
+    formSelection.reset();
+  });
 
 /** 
  * Transformation du mot de passe selon l'algorithme leet
@@ -153,7 +168,7 @@ function leetPassword (pswd){
         "a": "@", "b": "b", "c": "(", "d": "d", "e": "3", "f": "f", "g": "g", "h": "]-[", "i": "1", "j": "j", "k": "k", "l": "£", "m": "m", "n": "n", "o": "0", "p": "p", "q": "9", "r": "r", "s": "5", "t": "7", "u": "u", "v": "v", "w": "w", "x": "><", "y": "y", "z": "2", " ": "_"
     }//TODO Voir pour changer le type de caractère
     let newPswd = []
-    //TODO Faire en sorte que si le lettre ne correspond pas elle est quand même intégrée au nouveau tableau.
+    //TODO Faire en sorte que si la lettre ne correspond pas elle est quand même intégrée au nouveau tableau.
     for(const [key, value] of Object.entries(leetDictionnary)){
         
         for(let i = 0 ; i < oldPswd.length; i++){
@@ -171,8 +186,6 @@ function leetPassword (pswd){
     }
     return newPswd.join('')
 }
-
-console.log(leetPassword('bonjour la vie vous allez bien'))
 
 
 /**
@@ -215,9 +228,6 @@ function cesarPassword(pswd){ //TODO gérer les majuscules, les chiffres et cara
     }
     return newPswd
 }
-
-console.log(cesarPassword("bonjourfacebook"))
-
 
 /**
  * Fonction permettant la création d'un MDP selon l'algorithme Vigenere. Il admet 2 clés, une étant la position de la lettre dans l'alphabet, l'autre la position de la lettre par rapport à une clé répété. La somme de ces 2 clés donne la substitution à effectuer.
@@ -262,5 +272,3 @@ function vigenerePassword(pswd){//TODO gérer les majuscules, chiffres et caract
 
     return newPswd
 }
-
-console.log(vigenerePassword("hellofacebook"))
